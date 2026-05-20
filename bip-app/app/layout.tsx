@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "BIP",
@@ -12,9 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className="min-h-full" style={{ background: "#0d0d0d", color: "#e7e9ea" }}>
-        {children}
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body className="min-h-full">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

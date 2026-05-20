@@ -50,9 +50,10 @@ export default function RightSidebar() {
     <div
       style={{
         padding: "16px 20px",
-        borderLeft: "1px solid #1e1e1e",
+        borderLeft: "1px solid var(--border)",
         height: "100%",
         overflowY: "auto",
+        background: "var(--bg)",
       }}
     >
       {/* Search */}
@@ -60,15 +61,15 @@ export default function RightSidebar() {
         style={{
           display: "flex",
           alignItems: "center",
-          background: "#161616",
-          border: "1px solid #2a2a2a",
+          background: "var(--bg-input)",
+          border: "1px solid var(--border-mid)",
           borderRadius: "20px",
           padding: "8px 14px",
           gap: "8px",
           marginBottom: "16px",
         }}
       >
-        <Search size={14} color="#555e67" />
+        <Search size={14} color="var(--text-dim)" />
         <input
           type="text"
           placeholder="Search founders, startups..."
@@ -78,7 +79,7 @@ export default function RightSidebar() {
             background: "transparent",
             border: "none",
             outline: "none",
-            color: "#e7e9ea",
+            color: "var(--text)",
             fontSize: "13px",
             width: "100%",
           }}
@@ -111,30 +112,30 @@ export default function RightSidebar() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                background: "#161616",
-                border: "1px solid #2a2a2a",
+                background: "var(--bg-card)",
+                border: "1px solid var(--border-mid)",
                 borderRadius: cat.expanded && cat.subcategories.length > 0 ? "10px 10px 0 0" : "10px",
                 padding: "11px 14px",
                 cursor: "pointer",
-                color: "#e7e9ea",
+                color: "var(--text)",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ fontSize: "14px", fontWeight: 500 }}>{cat.label}</span>
-                <span style={{ fontSize: "12px", color: "#555e67" }}>{cat.count}</span>
+                <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>{cat.count}</span>
               </div>
               {cat.expanded ? (
-                <ChevronUp size={14} color="#555e67" />
+                <ChevronUp size={14} color="var(--text-dim)" />
               ) : (
-                <ChevronDown size={14} color="#555e67" />
+                <ChevronDown size={14} color="var(--text-dim)" />
               )}
             </button>
 
             {cat.expanded && cat.subcategories.length > 0 && (
               <div
                 style={{
-                  background: "#111111",
-                  border: "1px solid #2a2a2a",
+                  background: "var(--bg-subtle)",
+                  border: "1px solid var(--border-mid)",
                   borderTop: "none",
                   borderRadius: "0 0 10px 10px",
                   padding: "12px 14px",
@@ -155,7 +156,7 @@ export default function RightSidebar() {
                     onClick={() => toggleSubcat(idx, subIdx)}
                   >
                     <CheckboxIcon checked={sub.checked} />
-                    <span style={{ fontSize: "12px", color: "#8b98a5" }}>{sub.label}</span>
+                    <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>{sub.label}</span>
                   </label>
                 ))}
               </div>
@@ -175,7 +176,7 @@ function FilterCheckbox({ checked, label }: { checked: boolean; label: string })
       onClick={() => setIsChecked((v) => !v)}
     >
       <CheckboxIcon checked={isChecked} />
-      <span style={{ color: isChecked ? "#e7e9ea" : "#555e67", fontSize: "13px", fontWeight: 500 }}>
+      <span style={{ color: isChecked ? "var(--text)" : "var(--text-dim)", fontSize: "13px", fontWeight: 500 }}>
         {label}
       </span>
     </label>
@@ -189,7 +190,7 @@ function CheckboxIcon({ checked }: { checked: boolean }) {
         width: "14px",
         height: "14px",
         borderRadius: "3px",
-        border: checked ? "none" : "1.5px solid #444",
+        border: checked ? "none" : "1.5px solid var(--border-mid)",
         background: checked ? "#1d9bf0" : "transparent",
         display: "flex",
         alignItems: "center",

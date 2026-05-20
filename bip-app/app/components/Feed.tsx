@@ -136,7 +136,7 @@ export default function Feed() {
         style={{
           padding: "32px 16px",
           textAlign: "center",
-          color: "#71767b",
+          color: "var(--text-muted)",
           fontSize: "14px",
         }}
       >

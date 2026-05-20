@@ -16,8 +16,8 @@ export default function LeftSidebar() {
     <div
       style={{
         width: "56px",
-        background: "#0d0d0d",
-        borderRight: "1px solid #1e1e1e",
+        background: "var(--bg)",
+        borderRight: "1px solid var(--border)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -42,22 +42,22 @@ export default function LeftSidebar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: active === label ? "#1e1e1e" : "transparent",
+            background: active === label ? "var(--bg-card)" : "transparent",
             border: "none",
             cursor: "pointer",
-            color: active === label ? "#e7e9ea" : "#555e67",
+            color: active === label ? "var(--text)" : "var(--text-dim)",
             transition: "background 0.15s, color 0.15s",
           }}
           onMouseEnter={(e) => {
             if (active !== label) {
-              (e.currentTarget as HTMLButtonElement).style.background = "#1a1a1a";
-              (e.currentTarget as HTMLButtonElement).style.color = "#e7e9ea";
+              (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)";
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--text)";
             }
           }}
           onMouseLeave={(e) => {
             if (active !== label) {
               (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-              (e.currentTarget as HTMLButtonElement).style.color = "#555e67";
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--text-dim)";
             }
           }}
         >

@@ -51,7 +51,6 @@ export default function PostCard({
 
   const contentParts = mention ? content.split(mention) : [content];
 
-  // Close menu on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -65,7 +64,7 @@ export default function PostCard({
   return (
     <article
       style={{
-        borderBottom: "1px solid #1e1e1e",
+        borderBottom: "1px solid var(--border)",
         padding: "16px 16px 12px 16px",
         display: "flex",
         gap: "12px",
@@ -73,7 +72,7 @@ export default function PostCard({
         transition: "background 0.1s",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "#0f0f0f";
+        (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.background = "transparent";
@@ -111,7 +110,7 @@ export default function PostCard({
       <div style={{ flex: 1, minWidth: 0 }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px", flexWrap: "wrap" }}>
-          <span style={{ fontWeight: 700, fontSize: "15px", color: "#e7e9ea" }}>{name}</span>
+          <span style={{ fontWeight: 700, fontSize: "15px", color: "var(--text)" }}>{name}</span>
           {verified && (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#1d9bf0">
               <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.26 3.91.8c.66 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.33-2.19c1.4.46 2.91.2 3.92-.81s1.26-2.52.8-3.91C21.37 14.67 22.25 13.43 22.25 12zm-6.16-1.96l-4.5 4.5a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 011.06-1.06l1.72 1.72 3.97-3.97a.75.75 0 011.06 1.06z" />
@@ -121,8 +120,8 @@ export default function PostCard({
             <span
               style={{
                 fontSize: "11px",
-                color: "#71767b",
-                border: "1px solid #2f3336",
+                color: "var(--text-muted)",
+                border: "1px solid var(--border-mid)",
                 borderRadius: "4px",
                 padding: "1px 5px",
                 lineHeight: 1.4,
@@ -131,13 +130,13 @@ export default function PostCard({
               Ad
             </span>
           )}
-          <span style={{ color: "#71767b", fontSize: "14px" }}>{handle}</span>
-          <span style={{ color: "#71767b", fontSize: "14px" }}>·</span>
-          <span style={{ color: "#71767b", fontSize: "14px" }}>{time}</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{handle}</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
+          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{time}</span>
         </div>
 
         {/* Text */}
-        <div style={{ fontSize: "15px", color: "#e7e9ea", lineHeight: "1.6", marginBottom: "12px", whiteSpace: "pre-line" }}>
+        <div style={{ fontSize: "15px", color: "var(--text)", lineHeight: "1.6", marginBottom: "12px", whiteSpace: "pre-line" }}>
           {mention ? (
             <>
               {contentParts[0]}
@@ -156,7 +155,7 @@ export default function PostCard({
               borderRadius: "12px",
               overflow: "hidden",
               marginBottom: "12px",
-              border: "1px solid #1e1e1e",
+              border: "1px solid var(--border)",
               maxHeight: "300px",
             }}
           >
@@ -172,14 +171,14 @@ export default function PostCard({
         {productCard && (
           <div
             style={{
-              border: "1px solid #2f3336",
+              border: "1px solid var(--border-mid)",
               borderRadius: "12px",
               overflow: "hidden",
               marginBottom: "12px",
               display: "flex",
               gap: "12px",
               padding: "12px",
-              background: "#141414",
+              background: "var(--bg-card)",
             }}
           >
             <img
@@ -188,15 +187,15 @@ export default function PostCard({
               style={{ width: "72px", height: "72px", borderRadius: "8px", objectFit: "cover", flexShrink: 0 }}
             />
             <div>
-              <div style={{ fontSize: "14px", fontWeight: 600, color: "#e7e9ea", marginBottom: "2px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text)", marginBottom: "2px" }}>
                 {productCard.name}
               </div>
-              <div style={{ fontSize: "12px", color: "#71767b", marginBottom: "6px" }}>
+              <div style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "6px" }}>
                 {productCard.description}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "15px", fontWeight: 700, color: "#e7e9ea" }}>{productCard.price}</span>
-                <span style={{ fontSize: "13px", color: "#71767b", textDecoration: "line-through" }}>
+                <span style={{ fontSize: "15px", fontWeight: 700, color: "var(--text)" }}>{productCard.price}</span>
+                <span style={{ fontSize: "13px", color: "var(--text-muted)", textDecoration: "line-through" }}>
                   {productCard.originalPrice}
                 </span>
               </div>
@@ -204,7 +203,7 @@ export default function PostCard({
           </div>
         )}
 
-        {/* Action bar — only Save, Share, Three-dot menu */}
+        {/* Action bar */}
         <div
           style={{
             display: "flex",
@@ -214,17 +213,13 @@ export default function PostCard({
             marginTop: "8px",
           }}
         >
-          {/* Save */}
           <ActionBtn title="Save">
             <Bookmark size={17} />
           </ActionBtn>
-
-          {/* Share */}
           <ActionBtn title="Share">
             <Share2 size={17} />
           </ActionBtn>
 
-          {/* Three-dot menu */}
           <div ref={menuRef} style={{ position: "relative" }}>
             <ActionBtn title="More" onClick={() => setMenuOpen((v) => !v)}>
               <MoreHorizontal size={17} />
@@ -236,13 +231,13 @@ export default function PostCard({
                   position: "absolute",
                   right: 0,
                   top: "calc(100% + 4px)",
-                  background: "#1a1a1a",
-                  border: "1px solid #2f3336",
+                  background: "var(--menu-bg)",
+                  border: "1px solid var(--border-mid)",
                   borderRadius: "10px",
                   overflow: "hidden",
                   minWidth: "140px",
                   zIndex: 50,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                 }}
               >
                 <button
@@ -261,7 +256,7 @@ export default function PostCard({
                     gap: "10px",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = "#221212";
+                    (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)";
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.background = "transparent";
@@ -305,17 +300,17 @@ function ActionBtn({
         background: "transparent",
         border: "none",
         cursor: "pointer",
-        color: "#71767b",
+        color: "var(--text-muted)",
         borderRadius: "50%",
         transition: "background 0.15s, color 0.15s",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = "#1a1a1a";
-        (e.currentTarget as HTMLButtonElement).style.color = "#e7e9ea";
+        (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)";
+        (e.currentTarget as HTMLButtonElement).style.color = "var(--text)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-        (e.currentTarget as HTMLButtonElement).style.color = "#71767b";
+        (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)";
       }}
     >
       {children}

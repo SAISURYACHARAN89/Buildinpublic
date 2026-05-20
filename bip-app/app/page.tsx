@@ -4,7 +4,7 @@ import Feed from "./components/Feed";
 
 export default function Home() {
   return (
-    <div style={{ background: "#0d0d0d", minHeight: "100vh", color: "#e7e9ea" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <Header />
 
       {/* Content area below header */}
@@ -16,22 +16,24 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Feed — 62% */}
+        {/* Feed — 72%, with horizontal padding for breathing room */}
         <main
           style={{
-            flex: "0 0 62%",
-            borderRight: "1px solid #1e1e1e",
+            flex: "0 0 72%",
+            borderRight: "1px solid var(--border)",
             overflowY: "auto",
             height: "100%",
+            paddingLeft: "24px",
+            paddingRight: "24px",
           }}
         >
           <Feed />
         </main>
 
-        {/* Right Panel — 38% */}
+        {/* Right Panel — 28% */}
         <aside
           style={{
-            flex: "0 0 38%",
+            flex: "0 0 28%",
             height: "100%",
             overflowY: "auto",
           }}
