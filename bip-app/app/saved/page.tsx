@@ -3,7 +3,7 @@ import { Bookmark } from "lucide-react";
 
 export default function SavedPage() {
   return (
-    <div style={{ background: "#0d0d0d", minHeight: "100vh", color: "#e7e9ea" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <Header />
       <div
         style={{
@@ -16,7 +16,7 @@ export default function SavedPage() {
           justifyContent: "center",
           paddingTop: "80px",
           gap: "12px",
-          color: "#555e67",
+          color: "var(--text-dim)",
         }}
       >
         <Bookmark size={36} strokeWidth={1.5} />

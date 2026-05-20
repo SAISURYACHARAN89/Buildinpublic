@@ -50,7 +50,7 @@ export default function RightSidebar() {
     <div
       style={{
         padding: "16px 20px",
-        borderLeft: "1px solid var(--border)",
+        borderLeft: "0.5px solid var(--border)",
         height: "100%",
         overflowY: "auto",
         background: "var(--bg)",
@@ -84,21 +84,6 @@ export default function RightSidebar() {
             width: "100%",
           }}
         />
-      </div>
-
-      {/* Platform filters */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "14px",
-          marginBottom: "20px",
-          paddingLeft: "2px",
-        }}
-      >
-        <FilterCheckbox checked label="X" />
-        <FilterCheckbox checked label="IG" />
-        <FilterCheckbox checked={false} label="Reddit" />
       </div>
 
       {/* Categories */}

@@ -20,7 +20,7 @@ export default function Home() {
         <main
           style={{
             flex: "0 0 72%",
-            borderRight: "1px solid var(--border)",
+            borderRight: "0.5px solid var(--border)",
             overflowY: "auto",
             height: "100%",
             paddingLeft: "24px",

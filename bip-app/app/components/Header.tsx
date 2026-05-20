@@ -19,7 +19,7 @@ export default function Header() {
         right: 0,
         height: "48px",
         background: "var(--bg)",
-        borderBottom: "1px solid var(--border)",
+        borderBottom: "0.5px solid var(--border)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",

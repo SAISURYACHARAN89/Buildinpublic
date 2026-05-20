@@ -25,7 +25,7 @@ const RedditIcon = ({ size = 16 }: { size?: number }) => (
 
 // ── platform config ────────────────────────────────────────────────────────
 const PLATFORM_CONFIG: Record<string, { label: string; color: string; bg: string; icon: (s?: number) => React.ReactNode; prefix: string }> = {
-  x:      { label: "X",         color: "#e7e9ea", bg: "#1a1a1a",  icon: (s) => <XIcon size={s} />,      prefix: "@" },
+  x:      { label: "X",         color: "var(--text)", bg: "#1a1a1a",  icon: (s) => <XIcon size={s} />,      prefix: "@" },
   ig:     { label: "Instagram", color: "#e1306c", bg: "#1f1015",  icon: (s) => <IgIcon size={s} />,     prefix: "@" },
   reddit: { label: "Reddit",    color: "#ff4500", bg: "#1a1208",  icon: (s) => <RedditIcon size={s} />, prefix: "u/" },
 };
@@ -98,10 +98,10 @@ export default function ProfilePage() {
     : allPosts.filter((p) => p.platform === activeTab);
 
   return (
-    <div style={{ background: "#0d0d0d", minHeight: "100vh", color: "#e7e9ea" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <Header />
 
-      <div style={{ maxWidth: "880px", width: "100%", margin: "48px auto 0" }}>
+      <div style={{ maxWidth: "600px", width: "100%", margin: "48px auto 0" }}>
         {/* Cover */}
         <div style={{
           height: "160px",
@@ -116,7 +116,7 @@ export default function ProfilePage() {
         <div style={{ padding: "0 40px" }}>
           {/* Avatar + Edit row */}
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: "-36px", marginBottom: "12px" }}>
-            <div style={{ width: "72px", height: "72px", borderRadius: "50%", border: "3px solid #0d0d0d", overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ width: "72px", height: "72px", borderRadius: "50%", border: "3px solid var(--bg)", overflow: "hidden", flexShrink: 0 }}>
               {profile.avatarIsImage ? (
                 <img src={profile.avatar} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               ) : (
@@ -127,8 +127,8 @@ export default function ProfilePage() {
             </div>
             <button
               onClick={() => { setDraft(profile); setEditOpen(true); }}
-              style={{ background: "transparent", border: "1px solid #2f3336", borderRadius: "20px", padding: "7px 16px", color: "#e7e9ea", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#1a1a1a")}
+              style={{ background: "transparent", border: "1px solid var(--border-mid)", borderRadius: "20px", padding: "7px 16px", color: "var(--text)", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "transparent")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
               Edit profile
@@ -137,14 +137,14 @@ export default function ProfilePage() {
 
           {/* Name & bio */}
           <div style={{ marginBottom: "16px" }}>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#e7e9ea", marginBottom: "2px" }}>{profile.name}</div>
-            <div style={{ fontSize: "14px", color: "#71767b", marginBottom: "10px" }}>@{profile.handle}</div>
-            <div style={{ fontSize: "14px", color: "#c4cdd6", lineHeight: 1.6 }}>{profile.bio}</div>
+            <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)", marginBottom: "2px" }}>{profile.name}</div>
+            <div style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "10px" }}>@{profile.handle}</div>
+            <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{profile.bio}</div>
           </div>
 
           {/* Connected platforms */}
           <div style={{ marginBottom: "20px" }}>
-            <div style={{ fontSize: "11px", color: "#555e67", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+            <div style={{ fontSize: "11px", color: "var(--text-dim)", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.07em" }}>
               Connected platforms
             </div>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
@@ -166,9 +166,9 @@ export default function ProfilePage() {
                     {isConfirming && (
                       <div
                         ref={confirmRef}
-                        style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "#1a1a1a", border: "1px solid #2f3336", borderRadius: "10px", padding: "8px 10px", zIndex: 50, boxShadow: "0 6px 20px rgba(0,0,0,0.6)", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}
+                        style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "var(--bg-input)", border: "1px solid var(--border-mid)", borderRadius: "10px", padding: "8px 10px", zIndex: 50, boxShadow: "0 6px 20px rgba(0,0,0,0.6)", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}
                       >
-                        <span style={{ fontSize: "12px", color: "#a8b3bc" }}>Disconnect {cfg.label}?</span>
+                        <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>Disconnect {cfg.label}?</span>
                         {/* Confirm tick */}
                         <button
                           onMouseDown={(e) => {
@@ -188,7 +188,7 @@ export default function ProfilePage() {
                             setConfirmDisconnect(null);
                           }}
                           title="Cancel"
-                          style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#2f333622", border: "1px solid #2f3336", color: "#71767b", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                          style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#2f333622", border: "1px solid var(--border-mid)", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
                         >
                           <X size={12} />
                         </button>
@@ -202,12 +202,12 @@ export default function ProfilePage() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", borderBottom: "1px solid #1e1e1e" }}>
+          <div style={{ display: "flex", borderBottom: "0.5px solid var(--border)" }}>
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                style={{ background: "transparent", border: "none", borderBottom: activeTab === tab.id ? "2px solid #1d9bf0" : "2px solid transparent", padding: "12px 18px", color: activeTab === tab.id ? "#e7e9ea" : "#71767b", fontSize: "14px", fontWeight: activeTab === tab.id ? 600 : 400, cursor: "pointer", marginBottom: "-1px", display: "flex", alignItems: "center", gap: "6px" }}
+                style={{ background: "transparent", border: "none", borderBottom: activeTab === tab.id ? "2px solid #1d9bf0" : "2px solid transparent", padding: "12px 18px", color: activeTab === tab.id ? "var(--text)" : "var(--text-muted)", fontSize: "14px", fontWeight: activeTab === tab.id ? 600 : 400, cursor: "pointer", marginBottom: "-1px", display: "flex", alignItems: "center", gap: "6px" }}
               >
                 {tab.id === "saved" && <Bookmark size={13} />}
                 {tab.label}
@@ -219,26 +219,26 @@ export default function ProfilePage() {
         {/* Posts */}
         <div>
           {postsToShow.length === 0 && (
-            <div style={{ padding: "48px 40px", color: "#555e67", fontSize: "14px", textAlign: "center" }}>Nothing here yet.</div>
+            <div style={{ padding: "48px 40px", color: "var(--text-dim)", fontSize: "14px", textAlign: "center" }}>Nothing here yet.</div>
           )}
           {postsToShow.map((post) => {
             const cfg = PLATFORM_CONFIG[post.platform];
             return (
               <div
                 key={post.id}
-                style={{ borderBottom: "1px solid #1e1e1e", padding: "16px 40px", cursor: "pointer", transition: "background 0.1s" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.background = "#0f0f0f")}
+                style={{ borderBottom: "0.5px solid var(--border)", padding: "16px 40px", cursor: "pointer", transition: "background 0.1s" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.background = "transparent")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.background = "transparent")}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px", color: cfg?.color ?? "#71767b" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px", color: cfg?.color ?? "var(--text-muted)" }}>
                   {cfg?.icon(14)}
                   <span style={{ fontSize: "12px", fontWeight: 500 }}>{cfg?.label}</span>
-                  <span style={{ color: "#555e67", fontSize: "12px" }}>· {post.time}</span>
+                  <span style={{ color: "var(--text-dim)", fontSize: "12px" }}>· {post.time}</span>
                 </div>
-                <div style={{ fontSize: "14px", color: "#c4cdd6", lineHeight: 1.6 }}>{post.content}</div>
+                <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{post.content}</div>
                 {post.image && (
-                  <div style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid #1e1e1e", marginTop: "10px" }}>
-                    <img src={post.image} alt="post media" style={{ width: "100%", display: "block", maxHeight: "260px", objectFit: "cover" }} />
+                  <div style={{ borderRadius: "10px", overflow: "hidden", border: "0.5px solid var(--border)", marginTop: "10px" }}>
+                    <img src={post.image} alt="post media" style={{ width: "55%", aspectRatio: "1/1", display: "block", objectFit: "cover", borderRadius: "8px" }} />
                   </div>
                 )}
               </div>
@@ -289,18 +289,18 @@ function AddPlatformButton({ connected, onAdd }: { connected: { id: string; hand
       <button
         onClick={() => { setOpen((v) => !v); setStep("pick"); setPicked(""); setHandle(""); }}
         title="Add platform"
-        style={{ width: "30px", height: "30px", borderRadius: "50%", border: "1.5px dashed #2f3336", background: "transparent", color: "#71767b", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color 0.15s, color 0.15s" }}
-        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#e7e9ea"; e.currentTarget.style.color = "#e7e9ea"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#2f3336"; e.currentTarget.style.color = "#71767b"; }}
+        style={{ width: "30px", height: "30px", borderRadius: "50%", border: "1.5px dashed #2f3336", background: "transparent", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color 0.15s, color 0.15s" }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--text)"; e.currentTarget.style.color = "var(--text)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-mid)"; e.currentTarget.style.color = "var(--text-muted)"; }}
       >
         <Plus size={14} />
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "#161616", border: "1px solid #2f3336", borderRadius: "12px", minWidth: "200px", zIndex: 50, overflow: "hidden", boxShadow: "0 8px 24px rgba(0,0,0,0.6)" }}>
+        <div style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, background: "var(--bg-card)", border: "1px solid var(--border-mid)", borderRadius: "12px", minWidth: "200px", zIndex: 50, overflow: "hidden", boxShadow: "0 8px 24px rgba(0,0,0,0.6)" }}>
           {step === "pick" && (
             <>
-              <div style={{ padding: "10px 14px 6px", fontSize: "11px", color: "#555e67", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Add platform</div>
+              <div style={{ padding: "10px 14px 6px", fontSize: "11px", color: "var(--text-dim)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>Add platform</div>
               {available.map((id) => {
                 const c = PLATFORM_CONFIG[id];
                 return (
@@ -322,7 +322,7 @@ function AddPlatformButton({ connected, onAdd }: { connected: { id: string; hand
           {step === "handle" && cfg && (
             <div style={{ padding: "14px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-                <button onClick={() => setStep("pick")} style={{ background: "transparent", border: "none", color: "#71767b", cursor: "pointer", padding: "2px", display: "flex" }}>
+                <button onClick={() => setStep("pick")} style={{ background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: "2px", display: "flex" }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                 </button>
                 <span style={{ color: cfg.color, fontSize: "13px", fontWeight: 600, display: "flex", alignItems: "center", gap: "5px" }}>{cfg.icon(13)} {cfg.label}</span>
@@ -332,7 +332,7 @@ function AddPlatformButton({ connected, onAdd }: { connected: { id: string; hand
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder={`${cfg.prefix}username`}
-                style={{ width: "100%", background: "#1a1a1a", border: "1px solid #2f3336", borderRadius: "8px", padding: "8px 10px", color: "#e7e9ea", fontSize: "13px", outline: "none", marginBottom: "10px" }}
+                style={{ width: "100%", background: "var(--bg-input)", border: "1px solid var(--border-mid)", borderRadius: "8px", padding: "8px 10px", color: "var(--text)", fontSize: "13px", outline: "none", marginBottom: "10px" }}
               />
               <button
                 onClick={() => {
@@ -378,12 +378,12 @@ function EditModal({ draft, setDraft, onSave, onClose }: {
       style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div style={{ background: "#141414", border: "1px solid #2f3336", borderRadius: "16px", width: "100%", maxWidth: "500px", overflow: "hidden", maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
+      <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-mid)", borderRadius: "16px", width: "100%", maxWidth: "500px", overflow: "hidden", maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: "1px solid #1e1e1e", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: "0.5px solid var(--border)", flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <button onClick={onClose}
-              style={{ background: "transparent", border: "none", cursor: "pointer", color: "#e7e9ea", display: "flex", padding: "4px", borderRadius: "50%" }}
+              style={{ background: "transparent", border: "none", cursor: "pointer", color: "var(--text)", display: "flex", padding: "4px", borderRadius: "50%" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#1e1e1e")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
@@ -462,15 +462,15 @@ function EditModal({ draft, setDraft, onSave, onClose }: {
 function Field({ label, value, onChange, prefix, multiline }: { label: string; value: string; onChange: (v: string) => void; prefix?: string; multiline?: boolean }) {
   return (
     <div style={{ marginBottom: "16px" }}>
-      <label style={{ display: "block", fontSize: "12px", color: "#71767b", marginBottom: "6px", fontWeight: 500 }}>{label}</label>
-      <div style={{ display: "flex", alignItems: multiline ? "flex-start" : "center", background: "#1a1a1a", border: "1px solid #2f3336", borderRadius: "8px", padding: "10px 12px", gap: "4px" }}>
-        {prefix && <span style={{ color: "#71767b", fontSize: "14px", flexShrink: 0 }}>{prefix}</span>}
+      <label style={{ display: "block", fontSize: "12px", color: "var(--text-muted)", marginBottom: "6px", fontWeight: 500 }}>{label}</label>
+      <div style={{ display: "flex", alignItems: multiline ? "flex-start" : "center", background: "var(--bg-input)", border: "1px solid var(--border-mid)", borderRadius: "8px", padding: "10px 12px", gap: "4px" }}>
+        {prefix && <span style={{ color: "var(--text-muted)", fontSize: "14px", flexShrink: 0 }}>{prefix}</span>}
         {multiline ? (
           <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3}
-            style={{ background: "transparent", border: "none", outline: "none", color: "#e7e9ea", fontSize: "14px", width: "100%", resize: "none", fontFamily: "inherit", lineHeight: 1.5 }} />
+            style={{ background: "transparent", border: "none", outline: "none", color: "var(--text)", fontSize: "14px", width: "100%", resize: "none", fontFamily: "inherit", lineHeight: 1.5 }} />
         ) : (
           <input type="text" value={value} onChange={(e) => onChange(e.target.value)}
-            style={{ background: "transparent", border: "none", outline: "none", color: "#e7e9ea", fontSize: "14px", width: "100%" }} />
+            style={{ background: "transparent", border: "none", outline: "none", color: "var(--text)", fontSize: "14px", width: "100%" }} />
         )}
       </div>
     </div>
