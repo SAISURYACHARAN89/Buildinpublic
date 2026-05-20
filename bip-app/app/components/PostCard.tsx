@@ -16,6 +16,7 @@ interface PostCardProps {
   mention?: string;
   mediaUrl?: string;
   mediaAlt?: string;
+  mediaAspect?: "16:9" | "9:16" | "1:1";
   productCard?: {
     image: string;
     name: string;
@@ -44,6 +45,7 @@ export default function PostCard({
   mention,
   mediaUrl,
   mediaAlt,
+  mediaAspect = "16:9",
   productCard,
 }: PostCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -156,7 +158,10 @@ export default function PostCard({
               overflow: "hidden",
               marginBottom: "12px",
               border: "1px solid var(--border)",
-              maxHeight: "300px",
+              aspectRatio:
+                mediaAspect === "9:16" ? "9/16" :
+                mediaAspect === "1:1"  ? "1/1"  : "16/9",
+              width: mediaAspect === "9:16" ? "56%" : "100%",
             }}
           >
             <img
