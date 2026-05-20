@@ -74,7 +74,7 @@ export default function PostCard({
         transition: "background 0.1s",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)";
+        (e.currentTarget as HTMLElement).style.background = "transparent";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.background = "transparent";
@@ -161,7 +161,7 @@ export default function PostCard({
               aspectRatio:
                 mediaAspect === "9:16" ? "9/16" :
                 mediaAspect === "1:1"  ? "1/1"  : "16/9",
-              width: mediaAspect === "9:16" ? "56%" : "100%",
+              width: mediaAspect === "9:16" ? "35%" : mediaAspect === "1:1" ? "55%" : "65%",
             }}
           >
             <img
