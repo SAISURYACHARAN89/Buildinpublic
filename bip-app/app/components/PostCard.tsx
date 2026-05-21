@@ -88,8 +88,6 @@ export default function PostCard({
 }: PostCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [observing, setObserving] = useState(false);
-  const [observeHovered, setObserveHovered] = useState(false);
 
   const contentParts = mention ? content.split(mention) : [content];
   const platformInfo = platform ? PLATFORM_LOGOS[platform] : null;
@@ -179,35 +177,6 @@ export default function PostCard({
             <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{handle}</span>
             <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
             <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{time}</span>
-
-            {/* + observe inline after time */}
-            {!isAd && (
-              <button
-                onClick={(e) => { e.stopPropagation(); setObserving((v) => !v); }}
-                onMouseEnter={() => setObserveHovered(true)}
-                onMouseLeave={() => setObserveHovered(false)}
-                title={observing ? "Unobserve" : "Observe"}
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  border: `1px solid ${observing && observeHovered ? "#f4212e55" : "var(--border-mid)"}`,
-                  background: "transparent",
-                  cursor: "pointer",
-                  color: observing && observeHovered ? "#f4212e" : observing ? "var(--text-dim)" : "var(--text-muted)",
-                  fontSize: "14px",
-                  lineHeight: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  transition: "all 0.15s",
-                  padding: 0,
-                }}
-              >
-                {observing ? (observeHovered ? "×" : "✓") : "+"}
-              </button>
-            )}
           </div>
         </div>
 
