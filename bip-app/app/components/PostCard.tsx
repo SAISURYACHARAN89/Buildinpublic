@@ -115,7 +115,7 @@ export default function PostCard({
         transition: "background 0.1s",
         position: "relative",
       }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)"; }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
       onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
     >
       {/* Platform logo — top right corner */}
@@ -179,32 +179,36 @@ export default function PostCard({
             <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{handle}</span>
             <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
             <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{time}</span>
-          </div>
 
-          {/* Right: Observe button */}
-          {!isAd && (
-            <button
-              onClick={(e) => { e.stopPropagation(); setObserving((v) => !v); }}
-              onMouseEnter={() => setObserveHovered(true)}
-              onMouseLeave={() => setObserveHovered(false)}
-              style={{
-                flexShrink: 0,
-                background: "transparent",
-                border: `1px solid ${observing && observeHovered ? "#f4212e44" : "var(--border-mid)"}`,
-                borderRadius: "20px",
-                padding: "3px 11px",
-                cursor: "pointer",
-                color: observing && observeHovered ? "#f4212e" : observing ? "var(--text-muted)" : "var(--text)",
-                fontSize: "12px",
-                fontWeight: 500,
-                transition: "all 0.15s",
-                minWidth: "76px",
-                textAlign: "center",
-              }}
-            >
-              {observing ? (observeHovered ? "Unobserve" : "Observing") : "+ Observe"}
-            </button>
-          )}
+            {/* + observe inline after time */}
+            {!isAd && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setObserving((v) => !v); }}
+                onMouseEnter={() => setObserveHovered(true)}
+                onMouseLeave={() => setObserveHovered(false)}
+                title={observing ? "Unobserve" : "Observe"}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  borderRadius: "50%",
+                  border: `1px solid ${observing && observeHovered ? "#f4212e55" : "var(--border-mid)"}`,
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: observing && observeHovered ? "#f4212e" : observing ? "var(--text-dim)" : "var(--text-muted)",
+                  fontSize: "14px",
+                  lineHeight: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  transition: "all 0.15s",
+                  padding: 0,
+                }}
+              >
+                {observing ? (observeHovered ? "×" : "✓") : "+"}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Text */}
