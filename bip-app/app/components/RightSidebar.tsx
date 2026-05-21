@@ -1,80 +1,75 @@
 "use client";
 
-import { Search, ChevronDown, ChevronUp } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 
-const categories = [
-  { label: "AI native", count: "2345+", expanded: false, subcategories: [] },
-  { label: "Manufacturing", count: "1817+", expanded: false, subcategories: [] },
-  { label: "Food snack", count: "1500+", expanded: false, subcategories: [] },
+const CATEGORIES = [
+  {
+    label: "AI Native",
+    count: "2345+",
+    subcategories: ["LLM infra", "AI agents", "Code gen", "AI ops"],
+  },
   {
     label: "Health Tech",
     count: "267+",
-    expanded: true,
-    subcategories: [
-      { label: "drug monitor", checked: false },
-      { label: "AI doctors", checked: false },
-      { label: "sleep wellness", checked: false },
-      { label: "petlabs", checked: false },
-      { label: "AI Radiology", checked: true },
-    ],
+    subcategories: ["Drug monitor", "AI doctors", "Sleep wellness", "AI Radiology"],
+  },
+  {
+    label: "Manufacturing",
+    count: "1817+",
+    subcategories: ["Robotics", "Supply chain", "Quality AI", "Automation"],
+  },
+  {
+    label: "Food & Snack",
+    count: "1500+",
+    subcategories: ["D2C brands", "Alt protein", "Beverage", "Ghost kitchens"],
   },
 ];
 
 export default function RightSidebar() {
-  const [cats, setCats] = useState(categories);
   const [search, setSearch] = useState("");
+  const [focused, setFocused] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set(["AI Radiology"]));
 
-  const toggleCategory = (idx: number) => {
-    setCats((prev) =>
-      prev.map((c, i) => (i === idx ? { ...c, expanded: !c.expanded } : c))
-    );
-  };
-
-  const toggleSubcat = (catIdx: number, subIdx: number) => {
-    setCats((prev) =>
-      prev.map((c, i) =>
-        i === catIdx
-          ? {
-              ...c,
-              subcategories: c.subcategories.map((s, j) =>
-                j === subIdx ? { ...s, checked: !s.checked } : s
-              ),
-            }
-          : c
-      )
-    );
+  const toggle = (item: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(item) ? next.delete(item) : next.add(item);
+      return next;
+    });
   };
 
   return (
     <div
       style={{
-        padding: "16px 20px",
-        borderLeft: "0.5px solid var(--border)",
+        padding: "20px 18px",
         height: "100%",
         overflowY: "auto",
         background: "var(--bg)",
       }}
     >
-      {/* Search */}
+      {/* ── Search ───────────────────────────────────────── */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          gap: "10px",
           background: "var(--bg-input)",
-          border: "1px solid var(--border-mid)",
-          borderRadius: "20px",
-          padding: "8px 14px",
-          gap: "8px",
-          marginBottom: "16px",
+          border: `1px solid ${focused ? "var(--text-muted)" : "var(--border-mid)"}`,
+          borderRadius: "12px",
+          padding: "10px 14px",
+          marginBottom: "24px",
+          transition: "border-color 0.15s",
         }}
       >
-        <Search size={14} color="var(--text-dim)" />
+        <Search size={14} color={focused ? "var(--text-muted)" : "var(--text-dim)"} strokeWidth={2} />
         <input
           type="text"
-          placeholder="Search founders, startups..."
+          placeholder="Search founders, startups…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           style={{
             background: "transparent",
             border: "none",
@@ -82,118 +77,113 @@ export default function RightSidebar() {
             color: "var(--text)",
             fontSize: "13px",
             width: "100%",
+            letterSpacing: "0.01em",
           }}
         />
       </div>
 
-      {/* Categories */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-        {cats.map((cat, idx) => (
+      {/* ── Section title ────────────────────────────────── */}
+      <div
+        style={{
+          fontSize: "11px",
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "var(--text-dim)",
+          marginBottom: "16px",
+        }}
+      >
+        Trending Startup Narratives
+      </div>
+
+      {/* ── Category blocks ──────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        {CATEGORIES.map((cat) => (
           <div key={cat.label}>
-            <button
-              onClick={() => toggleCategory(idx)}
+            {/* Category header */}
+            <div
               style={{
-                width: "100%",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "baseline",
                 justifyContent: "space-between",
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-mid)",
-                borderRadius: cat.expanded && cat.subcategories.length > 0 ? "10px 10px 0 0" : "10px",
-                padding: "11px 14px",
-                cursor: "pointer",
-                color: "var(--text)",
+                marginBottom: "10px",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "14px", fontWeight: 500 }}>{cat.label}</span>
-                <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>{cat.count}</span>
-              </div>
-              {cat.expanded ? (
-                <ChevronUp size={14} color="var(--text-dim)" />
-              ) : (
-                <ChevronDown size={14} color="var(--text-dim)" />
-              )}
-            </button>
-
-            {cat.expanded && cat.subcategories.length > 0 && (
-              <div
+              <span
                 style={{
-                  background: "var(--bg-subtle)",
-                  border: "1px solid var(--border-mid)",
-                  borderTop: "none",
-                  borderRadius: "0 0 10px 10px",
-                  padding: "12px 14px",
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "10px 8px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  color: "var(--text)",
                 }}
               >
-                {cat.subcategories.map((sub, subIdx) => (
-                  <label
-                    key={sub.label}
+                {cat.label}
+              </span>
+              <span
+                style={{
+                  fontSize: "11px",
+                  color: "var(--text-dim)",
+                }}
+              >
+                {cat.count}
+              </span>
+            </div>
+
+            {/* Pill grid */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "6px",
+              }}
+            >
+              {cat.subcategories.map((sub) => {
+                const active = selected.has(sub);
+                return (
+                  <button
+                    key={sub}
+                    onClick={() => toggle(sub)}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "7px",
+                      background: active ? "#1d9bf015" : "var(--bg-card)",
+                      border: `1px solid ${active ? "#1d9bf055" : "var(--border-mid)"}`,
+                      borderRadius: "20px",
+                      padding: "5px 12px",
+                      fontSize: "12px",
+                      fontWeight: active ? 500 : 400,
+                      color: active ? "#1d9bf0" : "var(--text-muted)",
                       cursor: "pointer",
+                      transition: "all 0.15s",
+                      whiteSpace: "nowrap",
                     }}
-                    onClick={() => toggleSubcat(idx, subIdx)}
+                    onMouseEnter={(e) => {
+                      if (!active) {
+                        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--text-dim)";
+                        (e.currentTarget as HTMLButtonElement).style.color = "var(--text)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) {
+                        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-mid)";
+                        (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)";
+                      }
+                    }}
                   >
-                    <CheckboxIcon checked={sub.checked} />
-                    <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>{sub.label}</span>
-                  </label>
-                ))}
-              </div>
-            )}
+                    {sub}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Divider */}
+            <div
+              style={{
+                marginTop: "18px",
+                height: "0.5px",
+                background: "var(--border)",
+              }}
+            />
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function FilterCheckbox({ checked, label }: { checked: boolean; label: string }) {
-  const [isChecked, setIsChecked] = useState(checked);
-  return (
-    <label
-      style={{ display: "flex", alignItems: "center", gap: "5px", cursor: "pointer" }}
-      onClick={() => setIsChecked((v) => !v)}
-    >
-      <CheckboxIcon checked={isChecked} />
-      <span style={{ color: isChecked ? "var(--text)" : "var(--text-dim)", fontSize: "13px", fontWeight: 500 }}>
-        {label}
-      </span>
-    </label>
-  );
-}
-
-function CheckboxIcon({ checked }: { checked: boolean }) {
-  return (
-    <div
-      style={{
-        width: "14px",
-        height: "14px",
-        borderRadius: "3px",
-        border: checked ? "none" : "1.5px solid var(--border-mid)",
-        background: checked ? "#1d9bf0" : "transparent",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}
-    >
-      {checked && (
-        <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-          <path
-            d="M1 3.5L3.5 6L8 1"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
     </div>
   );
 }
