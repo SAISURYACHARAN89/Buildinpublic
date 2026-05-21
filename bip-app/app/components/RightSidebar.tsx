@@ -4,33 +4,25 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [
-  { label: "AI Native",       count: "2,345+" },
-  { label: "Health Tech",     count: "267+"   },
-  { label: "Manufacturing",   count: "1,817+" },
-  { label: "Food & Snack",    count: "1,500+" },
-  { label: "Fintech",         count: "983+"   },
-  { label: "Climate Tech",    count: "612+"   },
-  { label: "Dev Tools",       count: "448+"   },
-  { label: "Consumer",        count: "2,100+" },
-  { label: "B2B SaaS",        count: "3,240+" },
-  { label: "Web3",            count: "389+"   },
+  "AI Native",
+  "Health Tech",
+  "Manufacturing",
+  "Food & Snack",
+  "Fintech",
+  "Climate Tech",
+  "Dev Tools",
+  "Consumer",
+  "B2B SaaS",
+  "Web3",
 ];
 
 export default function RightSidebar() {
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set(["AI Native"]));
-
-  const toggle = (label: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.has(label) ? next.delete(label) : next.add(label);
-      return next;
-    });
-  };
+  const [selected, setSelected] = useState<string | null>(null);
 
   const filtered = search.trim()
-    ? CATEGORIES.filter((c) => c.label.toLowerCase().includes(search.toLowerCase()))
+    ? CATEGORIES.filter((c) => c.toLowerCase().includes(search.toLowerCase()))
     : CATEGORIES;
 
   return (
@@ -42,7 +34,7 @@ export default function RightSidebar() {
         background: "var(--bg)",
       }}
     >
-      {/* ── Search ─────────────────────────────────────── */}
+      {/* Search */}
       <div
         style={{
           display: "flex",
@@ -75,7 +67,7 @@ export default function RightSidebar() {
         />
       </div>
 
-      {/* ── Section heading ────────────────────────────── */}
+      {/* Section heading */}
       <div
         style={{
           fontSize: "11px",
@@ -83,62 +75,43 @@ export default function RightSidebar() {
           letterSpacing: "0.08em",
           textTransform: "uppercase",
           color: "var(--text-dim)",
-          marginBottom: "14px",
+          marginBottom: "10px",
         }}
       >
         Trending Startup Narratives
       </div>
 
-      {/* ── Pill grid ──────────────────────────────────── */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-        {filtered.map((cat) => {
-          const active = selected.has(cat.label);
-          return (
-            <button
-              key={cat.label}
-              onClick={() => toggle(cat.label)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                background: active ? "#1d9bf010" : "var(--bg-card)",
-                border: `1px solid ${active ? "#1d9bf055" : "var(--border-mid)"}`,
-                borderRadius: "20px",
-                padding: "6px 13px",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                if (!active) {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--text-dim)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!active) {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-mid)";
-                }
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "13px",
-                  fontWeight: active ? 600 : 400,
-                  color: active ? "#1d9bf0" : "var(--text)",
-                }}
-              >
-                {cat.label}
-              </span>
-              <span
-                style={{
-                  fontSize: "11px",
-                  color: active ? "#1d9bf088" : "var(--text-dim)",
-                }}
-              >
-                {cat.count}
-              </span>
-            </button>
-          );
-        })}
+      {/* Category rows */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+        {filtered.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelected(cat === selected ? null : cat)}
+            style={{
+              width: "100%",
+              textAlign: "left",
+              background: "var(--bg-card)",
+              border: "1px solid var(--border-mid)",
+              borderRadius: "10px",
+              padding: "11px 14px",
+              fontSize: "14px",
+              fontWeight: 400,
+              color: "var(--text)",
+              cursor: "pointer",
+              transition: "background 0.12s, border-color 0.12s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--text-dim)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "var(--bg-card)";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-mid)";
+            }}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
     </div>
   );
