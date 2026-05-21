@@ -44,38 +44,10 @@ export default function Header() {
         top: visible ? 0 : "-48px",
         zIndex: 20,
         transition: "top 0.25s ease",
+        overflow: "visible",
       }}
     >
-      {/* Left: Logo + dark mode + profile */}
-      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-        <Link href="/" style={{ textDecoration: "none", marginRight: "4px" }}>
-          <span style={{ fontSize: "18px", letterSpacing: "0.02em", color: "var(--text)" }}>
-            <span style={{ fontWeight: 300 }}>publicly</span>
-            <span style={{ fontWeight: 700 }}>Built</span>
-          </span>
-        </Link>
-
-        <button
-          onClick={toggle}
-          title={isDark ? "Light mode" : "Dark mode"}
-          style={{
-            width: "30px", height: "30px", borderRadius: "50%",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "transparent", border: "none", cursor: "pointer",
-            color: "var(--text-muted)", transition: "background 0.15s, color 0.15s",
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text)"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)"; }}
-        >
-          {isDark ? <Sun size={15} /> : <Moon size={15} />}
-        </button>
-
-        <NavIcon href="/profile" label="Profile" active={pathname === "/profile"}>
-          <User size={17} />
-        </NavIcon>
-      </div>
-
-      {/* Center: For you / Following dropdown */}
+      {/* Left: For you / Following dropdown */}
       <div ref={dropRef} style={{ position: "relative" }}>
         <button
           onClick={() => setDropOpen((o) => !o)}
@@ -105,8 +77,7 @@ export default function Header() {
             style={{
               position: "absolute",
               top: "calc(100% + 6px)",
-              left: "50%",
-              transform: "translateX(-50%)",
+              left: 0,
               background: "var(--menu-bg)",
               border: "1px solid var(--border-mid)",
               borderRadius: "12px",
@@ -144,8 +115,35 @@ export default function Header() {
         )}
       </div>
 
-      {/* Right: spacer to balance layout */}
-      <div style={{ width: "96px" }} />
+      {/* Center: Logo */}
+      <Link href="/" style={{ textDecoration: "none", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+        <span style={{ fontSize: "18px", letterSpacing: "0.02em", color: "var(--text)", whiteSpace: "nowrap" }}>
+          <span style={{ fontWeight: 300 }}>publicly</span>
+          <span style={{ fontWeight: 700 }}>Built</span>
+        </span>
+      </Link>
+
+      {/* Right: dark mode + profile */}
+      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <button
+          onClick={toggle}
+          title={isDark ? "Light mode" : "Dark mode"}
+          style={{
+            width: "30px", height: "30px", borderRadius: "50%",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "transparent", border: "none", cursor: "pointer",
+            color: "var(--text-muted)", transition: "background 0.15s, color 0.15s",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text)"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)"; }}
+        >
+          {isDark ? <Sun size={15} /> : <Moon size={15} />}
+        </button>
+
+        <NavIcon href="/profile" label="Profile" active={pathname === "/profile"}>
+          <User size={17} />
+        </NavIcon>
+      </div>
     </div>
   );
 }
