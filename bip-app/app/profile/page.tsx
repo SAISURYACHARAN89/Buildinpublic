@@ -72,6 +72,7 @@ function ProfileContent() {
   };
   const [activeTab, setActiveTab] = useState("all");
   const [editOpen, setEditOpen] = useState(false);
+  const [observing, setObserving] = useState(false);
 
   const [profile, setProfile] = useState({
     name: "John Doe",
@@ -151,12 +152,16 @@ function ProfileContent() {
                   </div>
                 )}
               </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {/* Observe button */}
+              <ObserveButton observing={observing} onToggle={() => setObserving((v) => !v)} />
               <button
                 onClick={() => { setDraft(profile); setEditOpen(true); }}
                 style={{ background: "transparent", border: "1px solid var(--border-mid)", borderRadius: "20px", padding: "7px 16px", color: "var(--text)", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
               >
                 Edit profile
               </button>
+            </div>
             </div>
 
             {/* Name & bio */}
@@ -288,6 +293,39 @@ export default function ProfilePage() {
     <HeaderProvider>
       <ProfileContent />
     </HeaderProvider>
+  );
+}
+
+// ── Observe Button ───────────────────────────────────────────────────────
+function ObserveButton({ observing, onToggle }: { observing: boolean; onToggle: () => void }) {
+  const [hovered, setHovered] = useState(false);
+
+  const label = observing
+    ? (hovered ? "Unobserve" : "Observing")
+    : "+ Observe";
+
+  return (
+    <button
+      onClick={onToggle}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: "transparent",
+        border: observing && hovered
+          ? "1px solid #f4212e44"
+          : "1px solid var(--border-mid)",
+        borderRadius: "20px",
+        padding: "7px 16px",
+        color: observing && hovered ? "#f4212e" : observing ? "var(--text-muted)" : "var(--text)",
+        fontSize: "13px",
+        fontWeight: 600,
+        cursor: "pointer",
+        transition: "all 0.15s",
+        minWidth: "96px",
+      }}
+    >
+      {label}
+    </button>
   );
 }
 

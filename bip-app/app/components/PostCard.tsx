@@ -50,6 +50,7 @@ export default function PostCard({
 }: PostCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [observing, setObserving] = useState(false);
 
   const contentParts = mention ? content.split(mention) : [content];
 
@@ -135,6 +136,45 @@ export default function PostCard({
           <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{handle}</span>
           <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
           <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{time}</span>
+
+          {/* Observe button */}
+          {!isAd && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setObserving((v) => !v); }}
+              style={{
+                marginLeft: "auto",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                background: observing ? "transparent" : "transparent",
+                border: observing ? "1px solid var(--border-mid)" : "1px solid var(--border-mid)",
+                borderRadius: "20px",
+                padding: "3px 11px",
+                cursor: "pointer",
+                color: observing ? "var(--text-muted)" : "var(--text)",
+                fontSize: "12px",
+                fontWeight: 500,
+                transition: "all 0.15s",
+                flexShrink: 0,
+              }}
+              onMouseEnter={(e) => {
+                if (observing) {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "#f4212e44";
+                  (e.currentTarget as HTMLButtonElement).style.color = "#f4212e";
+                  (e.currentTarget as HTMLButtonElement).textContent = "Unobserve";
+                } else {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--text-dim)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-mid)";
+                (e.currentTarget as HTMLButtonElement).style.color = observing ? "var(--text-muted)" : "var(--text)";
+                (e.currentTarget as HTMLButtonElement).textContent = observing ? "Observing" : "+ Observe";
+              }}
+            >
+              {observing ? "Observing" : "+ Observe"}
+            </button>
+          )}
         </div>
 
         {/* Text */}
