@@ -1,22 +1,20 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, TrendingUp } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [
-  { label: "AI Native",     count: 2345 },
-  { label: "B2B SaaS",      count: 3240 },
-  { label: "Consumer",      count: 2100 },
-  { label: "Manufacturing", count: 1817 },
-  { label: "Food & Snack",  count: 1500 },
-  { label: "Fintech",       count: 983  },
-  { label: "Climate Tech",  count: 612  },
-  { label: "Dev Tools",     count: 448  },
-  { label: "Health Tech",   count: 267  },
-  { label: "Web3",          count: 389  },
+  { label: "AI Native",     count: "2,345", trend: "+12%" },
+  { label: "B2B SaaS",      count: "3,240", trend: "+8%"  },
+  { label: "Consumer",      count: "2,100", trend: "+5%"  },
+  { label: "Manufacturing", count: "1,817", trend: "+3%"  },
+  { label: "Food & Snack",  count: "1,500", trend: "+6%"  },
+  { label: "Fintech",       count: "983",   trend: "+9%"  },
+  { label: "Climate Tech",  count: "612",   trend: "+18%" },
+  { label: "Dev Tools",     count: "448",   trend: "+14%" },
+  { label: "Health Tech",   count: "267",   trend: "+7%"  },
+  { label: "Web3",          count: "389",   trend: "-2%"  },
 ];
-
-const MAX = Math.max(...CATEGORIES.map((c) => c.count));
 
 export default function RightSidebar() {
   const [search, setSearch] = useState("");
@@ -46,7 +44,7 @@ export default function RightSidebar() {
           border: `1px solid ${focused ? "var(--border-mid)" : "var(--border)"}`,
           borderRadius: "10px",
           padding: "9px 13px",
-          marginBottom: "28px",
+          marginBottom: "24px",
           transition: "border-color 0.15s",
         }}
       >
@@ -69,84 +67,112 @@ export default function RightSidebar() {
         />
       </div>
 
-      {/* Heading */}
+      {/* Section heading */}
       <div
         style={{
-          fontSize: "10px",
-          fontWeight: 700,
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: "var(--text-dim)",
-          marginBottom: "16px",
+          display: "flex",
+          alignItems: "center",
+          gap: "7px",
+          marginBottom: "12px",
         }}
       >
-        Narratives
+        <TrendingUp size={13} color="var(--text-dim)" strokeWidth={2} />
+        <span
+          style={{
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.09em",
+            textTransform: "uppercase",
+            color: "var(--text-dim)",
+          }}
+        >
+          Trending Narratives
+        </span>
       </div>
 
       {/* Rows */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-        {filtered.map((cat) => {
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {filtered.map((cat, i) => {
           const isSelected = selected === cat.label;
-          const barWidth = Math.round((cat.count / MAX) * 100);
+          const isNeg = cat.trend.startsWith("-");
 
           return (
             <button
               key={cat.label}
               onClick={() => setSelected(isSelected ? null : cat.label)}
               style={{
-                position: "relative",
                 width: "100%",
                 textAlign: "left",
-                background: "transparent",
+                background: isSelected ? "var(--bg-card)" : "transparent",
                 border: "none",
-                borderRadius: "8px",
-                padding: "10px 10px",
+                borderBottom: i < filtered.length - 1 ? "0.5px solid var(--border)" : "none",
+                padding: "12px 8px",
                 cursor: "pointer",
-                overflow: "hidden",
+                transition: "background 0.15s",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "8px",
+              }}
+              onMouseEnter={(e) => {
+                if (!isSelected)
+                  (e.currentTarget as HTMLButtonElement).style.background = "var(--hover-bg)";
+              }}
+              onMouseLeave={(e) => {
+                if (!isSelected)
+                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
               }}
             >
-              {/* Background fill bar */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: `${barWidth}%`,
-                  background: isSelected ? "#1d9bf008" : "var(--bg-subtle)",
-                  borderRadius: "8px",
-                  transition: "background 0.2s",
-                  pointerEvents: "none",
-                }}
-              />
-
-              {/* Content */}
-              <div
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
+              {/* Left: rank + label */}
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
                 <span
                   style={{
-                    fontSize: "13px",
-                    fontWeight: isSelected ? 600 : 400,
-                    color: isSelected ? "var(--text)" : "var(--text-muted)",
-                    transition: "color 0.15s, font-weight 0.15s",
-                  }}
-                >
-                  {cat.label}
-                </span>
-                <span
-                  style={{
-                    fontSize: "11px",
+                    fontSize: "12px",
                     color: "var(--text-dim)",
                     fontVariantNumeric: "tabular-nums",
+                    width: "16px",
+                    flexShrink: 0,
                   }}
                 >
-                  {cat.count.toLocaleString()}
+                  {i + 1}
                 </span>
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: isSelected ? 600 : 500,
+                      color: isSelected ? "var(--text)" : "var(--text-muted)",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      transition: "color 0.15s",
+                    }}
+                  >
+                    {cat.label}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      color: "var(--text-dim)",
+                      marginTop: "1px",
+                    }}
+                  >
+                    {cat.count} startups
+                  </div>
+                </div>
               </div>
+
+              {/* Right: trend */}
+              <span
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  color: isNeg ? "#f4212e" : "#00ba7c",
+                  flexShrink: 0,
+                }}
+              >
+                {cat.trend}
+              </span>
             </button>
           );
         })}
