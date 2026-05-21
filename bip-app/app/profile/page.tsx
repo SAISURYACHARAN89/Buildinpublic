@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "../components/Header";
+import RightSidebar from "../components/RightSidebar";
 import { useState, useRef, useEffect } from "react";
 import { X, Bookmark, Plus, Check, Camera } from "lucide-react";
 
@@ -69,7 +70,6 @@ export default function ProfilePage() {
   });
   const [draft, setDraft] = useState(profile);
 
-  // connected platforms as state so + button can add/remove
   const [connected, setConnected] = useState<{ id: string; handle: string }[]>([
     { id: "x",      handle: "@johndoe" },
     { id: "ig",     handle: "@johndoe" },
@@ -79,7 +79,6 @@ export default function ProfilePage() {
   const [confirmDisconnect, setConfirmDisconnect] = useState<string | null>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
 
-  // close disconnect popover on outside click — but NOT on clicks inside the popover
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (confirmRef.current && !confirmRef.current.contains(e.target as Node)) {
@@ -101,150 +100,166 @@ export default function ProfilePage() {
     <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <Header />
 
-      <div style={{ maxWidth: "600px", width: "100%", margin: "48px auto 0" }}>
-        {/* Cover */}
-        <div style={{
-          height: "160px",
-          width: "100%",
-          background: profile.bannerIsImage ? "none" : profile.banner,
-          backgroundImage: profile.bannerIsImage ? `url(${profile.banner})` : undefined,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }} />
+      {/* Same 2-column layout as home */}
+      <div
+        style={{
+          marginTop: "48px",
+          display: "flex",
+          height: "calc(100vh - 48px)",
+          overflow: "hidden",
+        }}
+      >
+        {/* Left — Profile segment (72%) */}
+        <main
+          style={{
+            flex: "0 0 72%",
+            borderRight: "0.5px solid var(--border)",
+            overflowY: "auto",
+            height: "100%",
+          }}
+        >
+          {/* Cover banner */}
+          <div style={{
+            height: "160px",
+            width: "100%",
+            background: profile.bannerIsImage ? "none" : profile.banner,
+            backgroundImage: profile.bannerIsImage ? `url(${profile.banner})` : undefined,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            flexShrink: 0,
+          }} />
 
-        {/* Profile info */}
-        <div style={{ padding: "0 40px" }}>
-          {/* Avatar + Edit row */}
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: "-36px", marginBottom: "12px" }}>
-            <div style={{ width: "72px", height: "72px", borderRadius: "50%", border: "3px solid var(--bg)", overflow: "hidden", flexShrink: 0 }}>
-              {profile.avatarIsImage ? (
-                <img src={profile.avatar} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-              ) : (
-                <div style={{ width: "100%", height: "100%", background: profile.avatar, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "26px", fontWeight: 700, color: "white" }}>
-                  {profile.name.charAt(0)}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => { setDraft(profile); setEditOpen(true); }}
-              style={{ background: "transparent", border: "1px solid var(--border-mid)", borderRadius: "20px", padding: "7px 16px", color: "var(--text)", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "transparent")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-            >
-              Edit profile
-            </button>
-          </div>
-
-          {/* Name & bio */}
-          <div style={{ marginBottom: "16px" }}>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)", marginBottom: "2px" }}>{profile.name}</div>
-            <div style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "10px" }}>@{profile.handle}</div>
-            <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{profile.bio}</div>
-          </div>
-
-          {/* Connected platforms */}
-          <div style={{ marginBottom: "20px" }}>
-            <div style={{ fontSize: "11px", color: "var(--text-dim)", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-              Connected platforms
-            </div>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-              {connected.map((p) => {
-                const cfg = PLATFORM_CONFIG[p.id];
-                const isConfirming = confirmDisconnect === p.id;
-                return (
-                  <div key={p.id} style={{ position: "relative" }}>
-                    {/* Platform pill */}
-                    <button
-                      onClick={() => setConfirmDisconnect(isConfirming ? null : p.id)}
-                      style={{ display: "flex", alignItems: "center", gap: "7px", background: cfg.bg, border: `1px solid ${isConfirming ? cfg.color : cfg.color + "33"}`, borderRadius: "20px", padding: "6px 12px", color: cfg.color, cursor: "pointer", transition: "border 0.15s" }}
-                    >
-                      {cfg.icon(14)}
-                      <span style={{ fontSize: "13px", fontWeight: 500 }}>{p.handle}</span>
-                    </button>
-
-                    {/* Inline confirm popover */}
-                    {isConfirming && (
-                      <div
-                        ref={confirmRef}
-                        style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "var(--bg-input)", border: "1px solid var(--border-mid)", borderRadius: "10px", padding: "8px 10px", zIndex: 50, boxShadow: "0 6px 20px rgba(0,0,0,0.6)", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}
-                      >
-                        <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>Disconnect {cfg.label}?</span>
-                        {/* Confirm tick */}
-                        <button
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            setConnected((c) => c.filter((x) => x.id !== p.id));
-                            setConfirmDisconnect(null);
-                          }}
-                          title="Yes, disconnect"
-                          style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#f4212e22", border: "1px solid #f4212e55", color: "#f4212e", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-                        >
-                          <Check size={12} />
-                        </button>
-                        {/* Cancel X */}
-                        <button
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            setConfirmDisconnect(null);
-                          }}
-                          title="Cancel"
-                          style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#2f333622", border: "1px solid var(--border-mid)", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-                        >
-                          <X size={12} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-              <AddPlatformButton connected={connected} onAdd={(id, handle) => setConnected((c) => [...c, { id, handle }])} />
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div style={{ display: "flex", borderBottom: "0.5px solid var(--border)" }}>
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                style={{ background: "transparent", border: "none", borderBottom: activeTab === tab.id ? "2px solid #1d9bf0" : "2px solid transparent", padding: "12px 18px", color: activeTab === tab.id ? "var(--text)" : "var(--text-muted)", fontSize: "14px", fontWeight: activeTab === tab.id ? 600 : 400, cursor: "pointer", marginBottom: "-1px", display: "flex", alignItems: "center", gap: "6px" }}
-              >
-                {tab.id === "saved" && <Bookmark size={13} />}
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Posts */}
-        <div>
-          {postsToShow.length === 0 && (
-            <div style={{ padding: "48px 40px", color: "var(--text-dim)", fontSize: "14px", textAlign: "center" }}>Nothing here yet.</div>
-          )}
-          {postsToShow.map((post) => {
-            const cfg = PLATFORM_CONFIG[post.platform];
-            return (
-              <div
-                key={post.id}
-                style={{ borderBottom: "0.5px solid var(--border)", padding: "16px 40px", cursor: "pointer", transition: "background 0.1s" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.background = "transparent")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.background = "transparent")}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px", color: cfg?.color ?? "var(--text-muted)" }}>
-                  {cfg?.icon(14)}
-                  <span style={{ fontSize: "12px", fontWeight: 500 }}>{cfg?.label}</span>
-                  <span style={{ color: "var(--text-dim)", fontSize: "12px" }}>· {post.time}</span>
-                </div>
-                <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{post.content}</div>
-                {post.image && (
-                  <div style={{ borderRadius: "10px", overflow: "hidden", border: "0.5px solid var(--border)", marginTop: "10px" }}>
-                    <img src={post.image} alt="post media" style={{ width: "55%", aspectRatio: "1/1", display: "block", objectFit: "cover", borderRadius: "8px" }} />
+          {/* Profile info */}
+          <div style={{ padding: "0 32px" }}>
+            {/* Avatar + Edit row */}
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginTop: "-36px", marginBottom: "12px" }}>
+              <div style={{ width: "72px", height: "72px", borderRadius: "50%", border: "3px solid var(--bg)", overflow: "hidden", flexShrink: 0 }}>
+                {profile.avatarIsImage ? (
+                  <img src={profile.avatar} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", background: profile.avatar, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "26px", fontWeight: 700, color: "white" }}>
+                    {profile.name.charAt(0)}
                   </div>
                 )}
               </div>
-            );
-          })}
-        </div>
+              <button
+                onClick={() => { setDraft(profile); setEditOpen(true); }}
+                style={{ background: "transparent", border: "1px solid var(--border-mid)", borderRadius: "20px", padding: "7px 16px", color: "var(--text)", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}
+              >
+                Edit profile
+              </button>
+            </div>
+
+            {/* Name & bio */}
+            <div style={{ marginBottom: "16px" }}>
+              <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--text)", marginBottom: "2px" }}>{profile.name}</div>
+              <div style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "10px" }}>@{profile.handle}</div>
+              <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{profile.bio}</div>
+            </div>
+
+            {/* Connected platforms */}
+            <div style={{ marginBottom: "20px" }}>
+              <div style={{ fontSize: "11px", color: "var(--text-dim)", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+                Connected platforms
+              </div>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                {connected.map((p) => {
+                  const cfg = PLATFORM_CONFIG[p.id];
+                  const isConfirming = confirmDisconnect === p.id;
+                  return (
+                    <div key={p.id} style={{ position: "relative" }}>
+                      <button
+                        onClick={() => setConfirmDisconnect(isConfirming ? null : p.id)}
+                        style={{ display: "flex", alignItems: "center", gap: "7px", background: cfg.bg, border: `1px solid ${isConfirming ? cfg.color : cfg.color + "33"}`, borderRadius: "20px", padding: "6px 12px", color: cfg.color, cursor: "pointer", transition: "border 0.15s" }}
+                      >
+                        {cfg.icon(14)}
+                        <span style={{ fontSize: "13px", fontWeight: 500 }}>{p.handle}</span>
+                      </button>
+                      {isConfirming && (
+                        <div
+                          ref={confirmRef}
+                          style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, background: "var(--bg-input)", border: "1px solid var(--border-mid)", borderRadius: "10px", padding: "8px 10px", zIndex: 50, boxShadow: "0 6px 20px rgba(0,0,0,0.6)", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}
+                        >
+                          <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>Disconnect {cfg.label}?</span>
+                          <button
+                            onMouseDown={(e) => { e.stopPropagation(); setConnected((c) => c.filter((x) => x.id !== p.id)); setConfirmDisconnect(null); }}
+                            title="Yes, disconnect"
+                            style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#f4212e22", border: "1px solid #f4212e55", color: "#f4212e", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                          >
+                            <Check size={12} />
+                          </button>
+                          <button
+                            onMouseDown={(e) => { e.stopPropagation(); setConfirmDisconnect(null); }}
+                            title="Cancel"
+                            style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#2f333622", border: "1px solid var(--border-mid)", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                <AddPlatformButton connected={connected} onAdd={(id, handle) => setConnected((c) => [...c, { id, handle }])} />
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: "flex", borderBottom: "0.5px solid var(--border)" }}>
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{ background: "transparent", border: "none", borderBottom: activeTab === tab.id ? "2px solid #1d9bf0" : "2px solid transparent", padding: "12px 18px", color: activeTab === tab.id ? "var(--text)" : "var(--text-muted)", fontSize: "14px", fontWeight: activeTab === tab.id ? 600 : 400, cursor: "pointer", marginBottom: "-1px", display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  {tab.id === "saved" && <Bookmark size={13} />}
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Posts */}
+          <div>
+            {postsToShow.length === 0 && (
+              <div style={{ padding: "48px 32px", color: "var(--text-dim)", fontSize: "14px", textAlign: "center" }}>Nothing here yet.</div>
+            )}
+            {postsToShow.map((post) => {
+              const cfg = PLATFORM_CONFIG[post.platform];
+              return (
+                <div
+                  key={post.id}
+                  style={{ borderBottom: "0.5px solid var(--border)", padding: "16px 32px", cursor: "pointer", transition: "background 0.1s" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.background = "var(--hover-bg)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.background = "transparent")}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px", color: cfg?.color ?? "var(--text-muted)" }}>
+                    {cfg?.icon(14)}
+                    <span style={{ fontSize: "12px", fontWeight: 500 }}>{cfg?.label}</span>
+                    <span style={{ color: "var(--text-dim)", fontSize: "12px" }}>· {post.time}</span>
+                  </div>
+                  <div style={{ fontSize: "14px", color: "var(--text)", lineHeight: 1.6 }}>{post.content}</div>
+                  {post.image && (
+                    <div style={{ borderRadius: "10px", overflow: "hidden", border: "0.5px solid var(--border)", marginTop: "10px" }}>
+                      <img src={post.image} alt="post media" style={{ width: "55%", aspectRatio: "1/1", display: "block", objectFit: "cover", borderRadius: "8px" }} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </main>
+
+        {/* Right — Search + Filters (28%), same as home */}
+        <aside
+          style={{
+            flex: "0 0 28%",
+            height: "100%",
+            overflowY: "auto",
+          }}
+        >
+          <RightSidebar />
+        </aside>
       </div>
 
       {/* Edit Profile Modal */}

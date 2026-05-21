@@ -4,11 +4,35 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { User, Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
   const pathname = usePathname();
   const { theme, toggle } = useTheme();
   const isDark = theme === "dark";
+
+  // Hide-on-scroll-down, show-on-scroll-up
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY <= 0) {
+        setVisible(true);
+      } else if (currentY < lastScrollY.current) {
+        // scrolling up → show
+        setVisible(true);
+      } else if (currentY > lastScrollY.current + 4) {
+        // scrolling down (add small deadzone) → hide
+        setVisible(false);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
@@ -25,11 +49,13 @@ export default function Header() {
         justifyContent: "space-between",
         padding: "0 20px",
         zIndex: 20,
+        transform: visible ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 0.25s ease",
       }}
     >
-      {/* Logo + theme toggle */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Link href="/" style={{ textDecoration: "none" }}>
+      {/* Logo + theme toggle + profile icon */}
+      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+        <Link href="/" style={{ textDecoration: "none", marginRight: "4px" }}>
           <span style={{ fontSize: "18px", letterSpacing: "0.02em", color: "var(--text)" }}>
             <span style={{ fontWeight: 300 }}>publicly</span>
             <span style={{ fontWeight: 700 }}>Built</span>
@@ -64,14 +90,15 @@ export default function Header() {
         >
           {isDark ? <Sun size={16} /> : <Moon size={16} />}
         </button>
-      </div>
 
-      {/* Right nav icons */}
-      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+        {/* Profile icon — right of the dark mode button */}
         <NavIcon href="/profile" label="Profile" active={pathname === "/profile"}>
-          <User size={19} />
+          <User size={18} />
         </NavIcon>
       </div>
+
+      {/* Right side — empty for now, future nav items can go here */}
+      <div style={{ display: "flex", alignItems: "center", gap: "4px" }} />
     </header>
   );
 }
@@ -91,8 +118,8 @@ function NavIcon({
     <Link href={href} title={label} style={{ textDecoration: "none" }}>
       <div
         style={{
-          width: "36px",
-          height: "36px",
+          width: "30px",
+          height: "30px",
           borderRadius: "50%",
           display: "flex",
           alignItems: "center",
