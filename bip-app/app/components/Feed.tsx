@@ -5,6 +5,7 @@ import PostCard from "./PostCard";
 const posts = [
   {
     id: 1,
+    platform: "x",
     avatarText: "Y",
     avatarBg: "#cc0000",
     name: "Y Combinator",
@@ -22,6 +23,7 @@ const posts = [
   },
   {
     id: 2,
+    platform: "ig",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
     name: "Pulkit",
     handle: "@pulkit5D",
@@ -41,6 +43,7 @@ const posts = [
   },
   {
     id: 3,
+    platform: "ig",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
     name: "Sarah Chen",
     handle: "@sarahchen",
@@ -56,6 +59,7 @@ const posts = [
   },
   {
     id: 4,
+    platform: "reddit",
     avatarText: "A",
     avatarBg: "#7c3aed",
     name: "Andreessen Horowitz",
@@ -72,6 +76,7 @@ const posts = [
   },
   {
     id: 5,
+    platform: "x",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
     name: "Rohan Mehta",
     handle: "@rohanbuilds",
@@ -90,6 +95,7 @@ export default function Feed() {
       {posts.map((post) => (
         <PostCard
           key={post.id}
+          platform={post.platform}
           avatar={post.avatar || ""}
           avatarBg={post.avatarBg}
           avatarText={post.avatarText}

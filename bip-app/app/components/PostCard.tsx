@@ -3,6 +3,42 @@
 import { Bookmark, Share2, MoreHorizontal } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
+// ── Platform logos ────────────────────────────────────────────────────────
+const XLogo = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+const IgLogo = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+    <defs>
+      <radialGradient id="ig-g1" cx="30%" cy="107%" r="100%">
+        <stop offset="0%" stopColor="#fdf497" />
+        <stop offset="5%" stopColor="#fdf497" />
+        <stop offset="45%" stopColor="#fd5949" />
+        <stop offset="60%" stopColor="#d6249f" />
+        <stop offset="90%" stopColor="#285AEB" />
+      </radialGradient>
+    </defs>
+    <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#ig-g1)" />
+    <circle cx="12" cy="12" r="4.5" stroke="white" strokeWidth="1.8" fill="none" />
+    <circle cx="17.5" cy="6.5" r="1.2" fill="white" />
+  </svg>
+);
+
+const RedditLogo = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="#FF4500">
+    <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z" />
+  </svg>
+);
+
+const PLATFORM_LOGOS: Record<string, { logo: React.ReactNode; color: string }> = {
+  x:      { logo: <XLogo />,      color: "var(--text)" },
+  ig:     { logo: <IgLogo />,     color: "transparent" },
+  reddit: { logo: <RedditLogo />, color: "transparent" },
+};
+
 interface PostCardProps {
   avatar: string;
   avatarBg?: string;
@@ -12,6 +48,7 @@ interface PostCardProps {
   time: string;
   verified?: boolean;
   isAd?: boolean;
+  platform?: string;
   content: string;
   mention?: string;
   mediaUrl?: string;
@@ -41,6 +78,7 @@ export default function PostCard({
   time,
   verified,
   isAd,
+  platform,
   content,
   mention,
   mediaUrl,
@@ -51,8 +89,10 @@ export default function PostCard({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [observing, setObserving] = useState(false);
+  const [observeHovered, setObserveHovered] = useState(false);
 
   const contentParts = mention ? content.split(mention) : [content];
+  const platformInfo = platform ? PLATFORM_LOGOS[platform] : null;
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -73,14 +113,26 @@ export default function PostCard({
         gap: "12px",
         cursor: "pointer",
         transition: "background 0.1s",
+        position: "relative",
       }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "transparent";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "transparent";
-      }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)"; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
     >
+      {/* Platform logo — top right corner */}
+      {platformInfo && (
+        <div
+          style={{
+            position: "absolute",
+            top: "14px",
+            right: "14px",
+            opacity: 0.5,
+            color: platformInfo.color,
+            lineHeight: 1,
+          }}
+        >
+          {platformInfo.logo}
+        </div>
+      )}
       {/* Avatar */}
       <div style={{ flexShrink: 0 }}>
         {avatarText ? (
@@ -112,67 +164,45 @@ export default function PostCard({
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px", flexWrap: "wrap" }}>
-          <span style={{ fontWeight: 700, fontSize: "15px", color: "var(--text)" }}>{name}</span>
-          {verified && (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1d9bf0">
-              <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.26 3.91.8c.66 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.33-2.19c1.4.46 2.91.2 3.92-.81s1.26-2.52.8-3.91C21.37 14.67 22.25 13.43 22.25 12zm-6.16-1.96l-4.5 4.5a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 011.06-1.06l1.72 1.72 3.97-3.97a.75.75 0 011.06 1.06z" />
-            </svg>
-          )}
-          {isAd && (
-            <span
-              style={{
-                fontSize: "11px",
-                color: "var(--text-muted)",
-                border: "1px solid var(--border-mid)",
-                borderRadius: "4px",
-                padding: "1px 5px",
-                lineHeight: 1.4,
-              }}
-            >
-              Ad
-            </span>
-          )}
-          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{handle}</span>
-          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
-          <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>{time}</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px", gap: "8px" }}>
+          {/* Left: name, verified, ad, handle, time */}
+          <div style={{ display: "flex", alignItems: "center", gap: "5px", minWidth: 0, flexWrap: "wrap" }}>
+            <span style={{ fontWeight: 700, fontSize: "15px", color: "var(--text)", whiteSpace: "nowrap" }}>{name}</span>
+            {verified && (
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="#1d9bf0" style={{ flexShrink: 0 }}>
+                <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.26 3.91.8c.66 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.33-2.19c1.4.46 2.91.2 3.92-.81s1.26-2.52.8-3.91C21.37 14.67 22.25 13.43 22.25 12zm-6.16-1.96l-4.5 4.5a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 011.06-1.06l1.72 1.72 3.97-3.97a.75.75 0 011.06 1.06z" />
+              </svg>
+            )}
+            {isAd && (
+              <span style={{ fontSize: "11px", color: "var(--text-muted)", border: "1px solid var(--border-mid)", borderRadius: "4px", padding: "1px 5px", lineHeight: 1.4, flexShrink: 0 }}>Ad</span>
+            )}
+            <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{handle}</span>
+            <span style={{ color: "var(--text-muted)", fontSize: "14px" }}>·</span>
+            <span style={{ color: "var(--text-muted)", fontSize: "14px", whiteSpace: "nowrap" }}>{time}</span>
+          </div>
 
-          {/* Observe button */}
+          {/* Right: Observe button */}
           {!isAd && (
             <button
               onClick={(e) => { e.stopPropagation(); setObserving((v) => !v); }}
+              onMouseEnter={() => setObserveHovered(true)}
+              onMouseLeave={() => setObserveHovered(false)}
               style={{
-                marginLeft: "auto",
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                background: observing ? "transparent" : "transparent",
-                border: observing ? "1px solid var(--border-mid)" : "1px solid var(--border-mid)",
+                flexShrink: 0,
+                background: "transparent",
+                border: `1px solid ${observing && observeHovered ? "#f4212e44" : "var(--border-mid)"}`,
                 borderRadius: "20px",
                 padding: "3px 11px",
                 cursor: "pointer",
-                color: observing ? "var(--text-muted)" : "var(--text)",
+                color: observing && observeHovered ? "#f4212e" : observing ? "var(--text-muted)" : "var(--text)",
                 fontSize: "12px",
                 fontWeight: 500,
                 transition: "all 0.15s",
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => {
-                if (observing) {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "#f4212e44";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#f4212e";
-                  (e.currentTarget as HTMLButtonElement).textContent = "Unobserve";
-                } else {
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--text-dim)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-mid)";
-                (e.currentTarget as HTMLButtonElement).style.color = observing ? "var(--text-muted)" : "var(--text)";
-                (e.currentTarget as HTMLButtonElement).textContent = observing ? "Observing" : "+ Observe";
+                minWidth: "76px",
+                textAlign: "center",
               }}
             >
-              {observing ? "Observing" : "+ Observe"}
+              {observing ? (observeHovered ? "Unobserve" : "Observing") : "+ Observe"}
             </button>
           )}
         </div>
