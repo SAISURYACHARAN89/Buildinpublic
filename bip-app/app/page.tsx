@@ -1,47 +1,78 @@
+"use client";
+
+import { useRef } from "react";
 import Header from "./components/Header";
 import RightSidebar from "./components/RightSidebar";
 import Feed from "./components/Feed";
+import { HeaderProvider, useHeader } from "./context/HeaderContext";
+
+function HomeLayout() {
+  const feedRef = useRef<HTMLElement>(null);
+  const { setVisible } = useHeader();
+  const lastY = useRef(0);
+
+  const handleScroll = () => {
+    const el = feedRef.current;
+    if (!el) return;
+    const y = el.scrollTop;
+    if (y <= 0) {
+      setVisible(true);
+    } else if (y < lastY.current) {
+      // scrolling up
+      setVisible(true);
+    } else if (y > lastY.current + 4) {
+      // scrolling down
+      setVisible(false);
+    }
+    lastY.current = y;
+  };
+
+  return (
+    <div
+      style={{
+        background: "var(--bg)",
+        height: "100vh",
+        display: "flex",
+        overflow: "hidden",
+        color: "var(--text)",
+      }}
+    >
+      {/* Feed column — 72% — contains its own sticky header */}
+      <main
+        ref={feedRef}
+        onScroll={handleScroll}
+        style={{
+          flex: "0 0 72%",
+          borderRight: "0.5px solid var(--border)",
+          overflowY: "auto",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Header lives here — sticky inside the scroll container */}
+        <Header />
+        <Feed />
+      </main>
+
+      {/* Right sidebar — full height from very top of screen, no top offset */}
+      <aside
+        style={{
+          flex: "0 0 28%",
+          height: "100%",
+          overflowY: "auto",
+        }}
+      >
+        <RightSidebar />
+      </aside>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
-      <Header />
-
-      {/* Content area below header — flex row, full viewport height minus header */}
-      <div
-        style={{
-          marginTop: "48px",
-          display: "flex",
-          height: "calc(100vh - 48px)",
-          overflow: "hidden",
-        }}
-      >
-        {/* Feed — 72% */}
-        <main
-          style={{
-            flex: "0 0 72%",
-            /* The right border of feed meets the header bottom border exactly at the corner */
-            borderRight: "0.5px solid var(--border)",
-            overflowY: "auto",
-            height: "100%",
-            paddingLeft: "24px",
-            paddingRight: "24px",
-          }}
-        >
-          <Feed />
-        </main>
-
-        {/* Right Panel — 28% — no left border (feed's right border covers it) */}
-        <aside
-          style={{
-            flex: "0 0 28%",
-            height: "100%",
-            overflowY: "auto",
-          }}
-        >
-          <RightSidebar />
-        </aside>
-      </div>
-    </div>
+    <HeaderProvider>
+      <HomeLayout />
+    </HeaderProvider>
   );
 }

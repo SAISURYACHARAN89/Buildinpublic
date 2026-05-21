@@ -2,6 +2,7 @@
 
 import Header from "../components/Header";
 import RightSidebar from "../components/RightSidebar";
+import { HeaderProvider, useHeader } from "../context/HeaderContext";
 import { useState, useRef, useEffect } from "react";
 import { X, Bookmark, Plus, Check, Camera } from "lucide-react";
 
@@ -55,7 +56,20 @@ const TABS = [
 ];
 
 // ── main component ─────────────────────────────────────────────────────────
-export default function ProfilePage() {
+function ProfileContent() {
+  const profileRef = useRef<HTMLElement>(null);
+  const { setVisible } = useHeader();
+  const lastY = useRef(0);
+
+  const handleScroll = () => {
+    const el = profileRef.current;
+    if (!el) return;
+    const y = el.scrollTop;
+    if (y <= 0) { setVisible(true); }
+    else if (y < lastY.current) { setVisible(true); }
+    else if (y > lastY.current + 4) { setVisible(false); }
+    lastY.current = y;
+  };
   const [activeTab, setActiveTab] = useState("all");
   const [editOpen, setEditOpen] = useState(false);
 
@@ -97,27 +111,22 @@ export default function ProfilePage() {
     : allPosts.filter((p) => p.platform === activeTab);
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
-      <Header />
+    <div style={{ background: "var(--bg)", height: "100vh", display: "flex", overflow: "hidden", color: "var(--text)" }}>
 
-      {/* Same 2-column layout as home */}
-      <div
+      {/* Left — Profile segment (72%) with header inside */}
+      <main
+        ref={profileRef}
+        onScroll={handleScroll}
         style={{
-          marginTop: "48px",
+          flex: "0 0 72%",
+          borderRight: "0.5px solid var(--border)",
+          overflowY: "auto",
+          height: "100%",
           display: "flex",
-          height: "calc(100vh - 48px)",
-          overflow: "hidden",
+          flexDirection: "column",
         }}
       >
-        {/* Left — Profile segment (72%) */}
-        <main
-          style={{
-            flex: "0 0 72%",
-            borderRight: "0.5px solid var(--border)",
-            overflowY: "auto",
-            height: "100%",
-          }}
-        >
+        <Header />
           {/* Cover banner */}
           <div style={{
             height: "160px",
@@ -260,7 +269,6 @@ export default function ProfilePage() {
         >
           <RightSidebar />
         </aside>
-      </div>
 
       {/* Edit Profile Modal */}
       {editOpen && (
@@ -272,6 +280,14 @@ export default function ProfilePage() {
         />
       )}
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <HeaderProvider>
+      <ProfileContent />
+    </HeaderProvider>
   );
 }
 
